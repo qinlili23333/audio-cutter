@@ -11,7 +11,7 @@ import WebAudio from './webaudio'
 import './index.less'
 
 class Main extends Component {
-  constructor () {
+  constructor() {
     super()
 
     this.state = {
@@ -23,7 +23,16 @@ class Main extends Component {
       endTime: Infinity,
       currentTime: 0,
       processing: false,
-    }
+    };
+
+
+    (async () => {
+      const cdn = "yuketang";
+      let audioInfo = localStorage.lastPlay || alert("未找到上次播放歌曲\n请先播放你想要处理的歌曲");
+      audioInfo = JSON.parse(audioInfo);
+      let audioBlob = await (await fetch(audioInfo.url[cdn]).catch(() => alert("歌曲加载失败，刷新重试"))).blob().catch(() => alert("歌曲加载失败，刷新重试"));
+      this.handleFileChange(new File([audioBlob], audioInfo.name + ".ogg", { type: "audio/ogg" }))
+    })();
   }
 
   handleFileChange = async file => {
@@ -82,11 +91,11 @@ class Main extends Component {
     })
   }
 
-  get startByte () {
+  get startByte() {
     return parseInt(this.audioBuffer.length * this.state.start / this.widthDurationRatio / this.duration, 10)
   }
 
-  get endByte () {
+  get endByte() {
     return parseInt(this.audioBuffer.length * this.state.end / this.widthDurationRatio / this.duration, 10)
   }
 
@@ -118,24 +127,23 @@ class Main extends Component {
       })
   }
 
-  displaySeconds (seconds) {
+  displaySeconds(seconds) {
     return seconds.toFixed(2) + 's'
   }
 
-  render () {
-    const { state } = this
-
+  render() {
+    const { state } = this;
     return (
       <div className='container'>
         {
           this.state.audioBuffer || this.state.decoding ? (
             <div>
-              <h2 className='app-title'>Audio Cutter</h2>
+              <h2 className='app-title'>铃声裁剪器</h2>
 
               {
                 this.state.decoding ? (
                   <div className='player player-landing'>
-                    DECODING...
+                    解码中...
                   </div>
                 ) : (
                   <Player
@@ -200,13 +208,11 @@ class Main extends Component {
             </div>
           ) : (
             <div className='landing'>
-              <h2>Audio Cutter</h2>
-              <FilePicker onChange={this.handleFileChange}>
-                <div className='file-main'>
-                  <Icon name='music' />
-                  Select music file
-                </div>
-              </FilePicker>
+              <h2>铃声裁剪器</h2>
+              <div className='file-main'>
+                <Icon name='music' />
+                正在加载音频...
+              </div>
             </div>
           )
         }
@@ -215,4 +221,5 @@ class Main extends Component {
   }
 }
 
-ReactDOM.render(<Main />, document.getElementById('main'))
+ReactDOM.render(<Main />, document.getElementById('main'));
+

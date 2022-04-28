@@ -31,7 +31,7 @@ class Main extends Component {
       let audioInfo = localStorage.lastPlay || alert("未找到上次播放歌曲\n请先播放你想要处理的歌曲");
       audioInfo = JSON.parse(audioInfo);
       let audioBlob = await (await fetch(audioInfo.url[cdn]).catch(() => alert("歌曲加载失败，刷新重试"))).blob().catch(() => alert("歌曲加载失败，刷新重试"));
-      this.handleFileChange(new File([audioBlob], audioInfo.name + ".ogg", { type: "audio/ogg" }))
+      this.handleFileChange(new File([audioBlob], audioInfo.name + "-铃声.ogg", { type: "audio/ogg" }))
     })();
   }
 

@@ -4,7 +4,7 @@
  * @param {number} start
  * @param {number} end
  */
-function getMinMaxInRange (array, start, end) {
+function getMinMaxInRange(array, start, end) {
   let min = 0
   let min1 = 0
   let max = 0
@@ -33,6 +33,7 @@ function getMinMaxInRange (array, start, end) {
  * @return {Array<[number, number]>}
  */
 export default function (width, data) {
+  width = Math.floor(width);
   const dataLength = data.length
   const size = dataLength / width
   let current = 0

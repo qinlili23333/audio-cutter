@@ -27,7 +27,7 @@ class Main extends Component {
 
 
     (async () => {
-      const cdn = "yuketang";
+      const cdn = localStorage.preferCDN ? localStorage.preferCDN : "yuketang";
       let audioInfo = localStorage.lastPlay || alert("未找到上次播放歌曲\n请先播放你想要处理的歌曲");
       audioInfo = JSON.parse(audioInfo);
       let audioBlob = await (await fetch(audioInfo.url[cdn]).catch(() => alert("歌曲加载失败，刷新重试"))).blob().catch(() => alert("歌曲加载失败，刷新重试"));
@@ -89,6 +89,11 @@ class Main extends Component {
     this.setState({
       currentTime: this.state.startTime,
     })
+  }
+
+  handleSwitchClick = () => {
+    Array.prototype.reverse.call(audioBuffer.getChannelData(0));
+    Array.prototype.reverse.call(audioBuffer.getChannelData(1));
   }
 
   get startByte() {
@@ -163,17 +168,21 @@ class Main extends Component {
 
               <div className='controllers'>
                 <FilePicker onChange={this.handleFileChange}>
-                  <div className='ctrl-item' title='Reselect File'>
+                  <div className='ctrl-item' title='选择本地音频'>
                     <Icon name='music' />
                   </div>
                 </FilePicker>
 
-                <a className='ctrl-item' title='Play/Pause' onClick={this.handlePlayPauseClick}>
+                <a className='ctrl-item' title='播放/暂停' onClick={this.handlePlayPauseClick}>
                   <Icon name={this.state.paused ? 'play' : 'pause'} />
                 </a>
 
-                <a className='ctrl-item' title='Replay' onClick={this.handleReplayClick}>
+                <a className='ctrl-item' title='重新播放' onClick={this.handleReplayClick}>
                   <Icon name='replay' />
+                </a>
+
+                <a className='ctrl-item' title='倒放' onClick={this.handleSwitchClick}>
+                  <Icon name='switch' />
                 </a>
 
                 <div className='dropdown list-wrap'>
